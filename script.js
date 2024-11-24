@@ -1,8 +1,11 @@
+
+//Selección de Elementos del DOM
 const result = document.querySelector('.result');
 const form = document.querySelector('.get-weather');
 const nameCity = document.querySelector('#city');
 const nameCountry = document.querySelector('#country');
 
+// Manejo del Envío del Formulario
 form.addEventListener('submit', (e) => {
     e.preventDefault();
 
@@ -16,20 +19,21 @@ form.addEventListener('submit', (e) => {
     //console.log(nameCountry.value);
 })
 
+//Llamada a la API de OpenWeatherMap
 function callAPI(city, country){
     const apiId = '41d1d7f5c2475b3a16167b30bc4f265c';
     const url = `http://api.openweathermap.org/data/2.5/weather?q=${city},${country}&appid=${apiId}`;
 
-    fetch(url)
+    fetch(url) //Realiza una solicitud HTTP a la API
         .then(data => {
-            return data.json();
+            return data.json(); //Si la respuesta es exitosa, convierte la respuesta en formato JSON
         })
         .then(dataJSON => {
-            if (dataJSON.cod === '404') {
+            if (dataJSON.cod === '404') { //Si la ciudad no se encuentra muestra un error
                 showError('Ciudad no encontrada...');
             } else {
                 clearHTML();
-                showWeather(dataJSON);
+                showWeather(dataJSON); //Si la ciudad es válida, limpia cualquier contenido anterior y luego muestra los datos del clima 
             }
             //console.log(dataJSON);
         })
@@ -38,6 +42,7 @@ function callAPI(city, country){
         })
 }
 
+// Mostrar el Clima
 function showWeather(data){
     const {name, main:{temp, temp_min, temp_max}, weather:[arr]} = data;
 
@@ -63,6 +68,7 @@ function showWeather(data){
     console.log(arr.icon); */
 }
 
+// Mostrar Error, como que los campos no estén llenos o que la ciudad no exista
 function showError(message){
     //console.log(message);
     const alert = document.createElement('p');
@@ -70,15 +76,17 @@ function showError(message){
     alert.innerHTML = message;
 
     form.appendChild(alert);
-    setTimeout(() => {
+    setTimeout(() => { //Después de 3 segundos, el mensaje de error desaparece
         alert.remove();
     }, 3000);
 }
 
+//Conversión de Temperatura
 function kelvinToCentigrade(temp){
-    return parseInt(temp - 273.15);
+    return parseInt(temp - 273.15); //Convierte el resultado en un número entero
 }
 
+//Limpiar HTML Anterior
 function clearHTML(){
-    result.innerHTML = '';
+    result.innerHTML = ''; //Antes de mostrar nuevos resultados, se limpia el contenedor de cualquier contenido previo
 }
