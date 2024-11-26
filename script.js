@@ -1,27 +1,28 @@
-
 //Selección de Elementos del DOM
-const result = document.querySelector('.result');
-const form = document.querySelector('.get-weather');
+const result = document.querySelector('.result'); //El contenedor donde se mostrará la información del clima
+const form = document.querySelector('.get-weather'); //formulario que el usuario usará para enviar la solicitud de clima
 const nameCity = document.querySelector('#city');
 const nameCountry = document.querySelector('#country');
 
 // Manejo del Envío del Formulario
 form.addEventListener('submit', (e) => {
-    e.preventDefault();
+    e.preventDefault(); //Previene que el formulario se envíe de manera tradicional
 
     if (nameCity.value === '' || nameCountry.value === '') {
         showError('Ambos campos son obligatorios...');
         return;
     }
 
-    callAPI(nameCity.value, nameCountry.value);
+    //Si ambos campos están llenos, se llama a la función callAPI con los valores de la ciudad 
+
+    callAPI(nameCity.value, nameCountry.value); 
     //console.log(nameCity.value);
     //console.log(nameCountry.value);
 })
 
 //Llamada a la API de OpenWeatherMap
-function callAPI(city, country){
-    const apiId = '41d1d7f5c2475b3a16167b30bc4f265c';
+function callAPI(city, country){ // función que hace la solicitud a la API 
+    const apiId = '41d1d7f5c2475b3a16167b30bc4f265c'; //Es la clave de la API
     const url = `http://api.openweathermap.org/data/2.5/weather?q=${city},${country}&appid=${apiId}`;
 
     fetch(url) //Realiza una solicitud HTTP a la API
@@ -33,7 +34,7 @@ function callAPI(city, country){
                 showError('Ciudad no encontrada...');
             } else {
                 clearHTML();
-                showWeather(dataJSON); //Si la ciudad es válida, limpia cualquier contenido anterior y luego muestra los datos del clima 
+                showWeather(dataJSON); //Si la ciudad es válida, muestra los datos del clima 
             }
             //console.log(dataJSON);
         })
@@ -43,7 +44,7 @@ function callAPI(city, country){
 }
 
 // Mostrar el Clima
-function showWeather(data){
+function showWeather(data){ //Esta función recibe la respuesta de la API
     const {name, main:{temp, temp_min, temp_max}, weather:[arr]} = data;
 
     const degrees = kelvinToCentigrade(temp);
